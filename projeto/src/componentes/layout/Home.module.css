@@ -1,0 +1,17 @@
+.home_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: azure;
+  height: 82%;
+}
+
+.titulo_home {
+  display: flex;
+  align-items: center;
+  background-color: #222;
+  height: 50px;
+  padding: 2em;
+  color: #ffbb22;
+  border-radius: 10px;
+}

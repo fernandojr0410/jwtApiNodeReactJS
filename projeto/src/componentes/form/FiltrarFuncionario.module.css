@@ -1,0 +1,160 @@
+.formulario_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #04709f;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 82%;
+}
+
+.titulo_formulario {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  color: #222;
+  gap: 20px;
+}
+
+.subtitulo_formulario span {
+  color: #04709f;
+  text-decoration: underline;
+}
+
+.card_formulario_container {
+  display: flex;
+  flex-direction: column;
+  color: #222;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  align-items: center;
+  width: 100%;
+}
+
+.informacoes_formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 1em;
+}
+
+.informacoes_formulario input,
+.informacoes_formulario select,
+.nacionalidade_formulario,
+.genero_formulario {
+  border-radius: 10px;
+  border: 1px solid #222;
+  outline: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.genero_formulario {
+  display: flex;
+  flex-direction: column;
+}
+
+.button_formulario {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button_formulario button,
+.conta_formulario button {
+  width: 100%;
+  height: 40px;
+  background-color: #04709f;
+  border: none;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.6s ease-in-out;
+}
+
+.button_formulario:hover button {
+  background-color: #222;
+  color: #ffbb33;
+}
+
+.conta_formulario {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2em;
+  gap: 20px;
+}
+
+.conta_formulario span {
+  font-size: 18px;
+  font-weight: bold;
+  color: #04709f;
+}
+
+.conta_formulario:hover button {
+  background-color: #222;
+  color: #ffbb33;
+}
+
+.conta_formulario button {
+  padding: 0 1em;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.error_mensagem {
+  color: red;
+}
+
+.label_error {
+  color: red;
+}
+
+/* Modal */
+/* Estilo do modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Estilo do conteúdo do modal */
+.modalContent {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  padding: 20px;
+  transform: translateY(-100%);
+  animation: slideDown 0.5s forwards;
+}
+
+/* Estilo do botão de fechar */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Animação de deslizamento para baixo */
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

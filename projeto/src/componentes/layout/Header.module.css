@@ -1,0 +1,32 @@
+.header_container {
+  display: flex;
+  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #222;
+  padding: 2rem;
+  font-size: 18px;
+}
+
+.lista_header {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+}
+
+.lista_header a {
+  text-decoration: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.item:hover {
+  background-color: #222;
+  color: #ffbb33;
+}
