@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
-
-import MensagemCadastro from "../layout/MensagemCadastro";
-// import { Navigate } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
-// import Carregamento from "../layout/Carregamento";
-import styles from "./FiltrarFuncionario.module.css";
+import Modal from "../layout/Modal";
+import styles from "../styles/FiltrarFuncionario.module.css";
 
 function CadastrarFuncionario() {
   const [nome, setNome] = useState("");
@@ -21,17 +17,16 @@ function CadastrarFuncionario() {
 
   const [formularioValido, setFormularioValido] = useState(false);
 
-  const [cadastroConcluido, setCadastroConcluido] = useState(false);
+  // const [cadastroConcluido, setCadastroConcluido] = useState(false);
+  const [modalAberto, setModalAberto] = useState(false);
 
-  const token =
-    "'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwia…3Mjl9.IV4x31tjU2LJjTQdVp_bpYJjGgLErJOU2_0-C0ySX3Y'}";
+  const { token } = JSON.parse(localStorage.getItem("userData"));
 
-  // Função para formatar o CPF com máscara
+  // Formatar o CPF com máscara
   const formatCPF = (value) => {
-    // Remove todos os caracteres não numéricos
     const cleanedValue = value.replace(/\D/g, "");
 
-    // Aplica a máscara com os pontos após os três primeiros números
+    // máscara com os pontos após os três primeiros números
     let formattedValue = "";
     for (let i = 0; i < cleanedValue.length; i++) {
       if (i === 3 || i === 6) {
@@ -99,29 +94,39 @@ function CadastrarFuncionario() {
     } else {
       setCpfError("");
     }
+  };
 
-    fetch("http://localhost:6050/login", {
+  if (formularioValido) {
+    const funcionarioData = {
+      nome: nome,
+      cpf: cpf,
+      ativo: ativo,
+    };
+
+    
+
+    fetch("http://localhost:6050/funcionarios/insert", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-access-token": token,
       },
-      body: JSON.stringify({
-        user: "fernandojr",
-        pwd: "0410",
-      }),
+      body: JSON.stringify(funcionarioData),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro na solicitação.");
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log(data);
       })
       .catch((error) => {
-        console.error("Erro ao fazer login:", error);
+        console.error("Erro ao cadastrar funcionário:", error);
+        console.log(token);
       });
-  };
-
-  const handleCloseMensagemSucesso = () => {
-    setCadastroConcluido(false);
-  };
+  }
 
   const handleCpfChange = (event) => {
     const formattedCpf = formatCPF(event.target.value);
@@ -129,8 +134,8 @@ function CadastrarFuncionario() {
   };
 
   const handleAtivoChange = (event) => {
-    // Atualiza o estado com o valor selecionado no <select>
-    setAtivo(event.target.value);
+    setAtivo(event.target.value.toString());
+    console.log("Valor do status:", event.target.value);
   };
 
   return (
@@ -198,20 +203,6 @@ function CadastrarFuncionario() {
               )}
             </div>
 
-            {cadastroConcluido && (
-              <MensagemCadastro
-                mensagem="Funcionário cadastrado com sucesso!"
-                onClose={handleCloseMensagemSucesso}
-              />
-            )}
-
-            {/* {emailDuplicado && (
-              <MensagemCadastro
-                mensagem="O e-mail já está cadastrado. Por favor escolha outro e-mail"
-                onClose={handleCloseEmailDuplicado}
-              />
-            )}  */}
-
             <div className={styles.informacoes_formulario}>
               <div className={styles.button_formulario}>
                 <button type="submit">Cadastrar</button>
@@ -220,6 +211,14 @@ function CadastrarFuncionario() {
           </form>
         </div>
       </div>
+
+      {modalAberto && (
+        <Modal
+          mensagem="Funcionário cadastrado com sucesso!"
+          onClose={() => setModalAberto(false)}
+          link="/funcionarios"
+        />
+      )}
     </div>
   );
 }

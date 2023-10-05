@@ -1,26 +1,22 @@
 import { useState, useEffect } from "react";
-import MensagemCadastro from "../layout/MensagemCadastro";
-// import { Navigate } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
-// import Carregamento from "../layout/Carregamento";
-import styles from "./FiltrarFuncionario.module.css";
+import styles from "../styles/FiltrarFuncionario.module.css";
 
-function FiltrarFuncionario() {
+function FiltrarFuncionarios() {
   const [nome, setNome] = useState("");
 
   const [nomeError, setNomeError] = useState("");
 
   const [cpf, setCpf] = useState("");
-
   const [cpfError, setCpfError] = useState("");
 
   const [ativo, setAtivo] = useState("");
-
   const [ativoError, setAtivoError] = useState("");
 
   const [formularioValido, setFormularioValido] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
+
+  const { token } = JSON.parse(localStorage.getItem("userData"));
 
   const openModal = () => {
     setModalVisible(true);
@@ -30,15 +26,9 @@ function FiltrarFuncionario() {
     setModalVisible(false);
   };
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwia…5ODV9.Xk0IryrsFvUJ-oNYGYfcYZjIjbksiKaMkMVLEpj3NC8";
-
-  // Função para formatar o CPF com máscara
   const formatCPF = (value) => {
-    // Remove todos os caracteres não numéricos
     const cleanedValue = value.replace(/\D/g, "");
 
-    // Aplica a máscara com os pontos após os três primeiros números
     let formattedValue = "";
     for (let i = 0; i < cleanedValue.length; i++) {
       if (i === 3 || i === 6) {
@@ -107,29 +97,11 @@ function FiltrarFuncionario() {
       setCpfError("");
     }
 
-    fetch("http://localhost:6050/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user: "fernandojr",
-        pwd: "0410",
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Erro ao fazer login:", error);
-      });
-
     fetch("http://localhost:6050/funcionarios/findAll", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": token.JSON.stringify,
+        "x-access-token": token,
       },
     })
       .then((response) => {
@@ -143,12 +115,9 @@ function FiltrarFuncionario() {
       })
       .catch((error) => {
         console.error("Erro ao buscar funcionário:", error);
+        console.log(token);
       });
   };
-
-  // const handleCloseMensagemSucesso = () => {
-  //   setCadastroConcluido(false);
-  // };
 
   const handleCpfChange = (event) => {
     const formattedCpf = formatCPF(event.target.value);
@@ -156,14 +125,13 @@ function FiltrarFuncionario() {
   };
 
   const handleAtivoChange = (event) => {
-    // Atualiza o estado com o valor selecionado no <select>
     setAtivo(event.target.value);
   };
 
   return (
     <div className={styles.formulario_container}>
       <div className={styles.titulo_formulario}>
-        <h1>Filtrar Funcionário</h1>
+        <h1>Filtrar Funcionários</h1>
 
         <div className={styles.card_formulario_container}>
           <form onSubmit={handleSubmit}>
@@ -230,17 +198,6 @@ function FiltrarFuncionario() {
                 <button type="submit">Filtrar</button>
               </div>
             </div>
-            <div className={styles.modal}>
-              {modalVisible && (
-                <div className={styles.modalContent}>
-                  <span className={styles.close} onClick={closeModal}>
-                    &times;
-                  </span>
-                  <h2>Funcionários</h2>
-                  {/* Aqui você pode exibir a lista de funcionários */}
-                </div>
-              )}
-            </div>
           </form>
         </div>
       </div>
@@ -248,4 +205,4 @@ function FiltrarFuncionario() {
   );
 }
 
-export default FiltrarFuncionario;
+export default FiltrarFuncionarios;

@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styles from "./MensagemCadastro.module.css";
+import styles from "../styles/Modal.module.css";
 
-function MensagemCadastro({ mensagem, onClose, link }) {
+function Modal({ mensagem, onClose, link }) {
   return (
     <div className={styles.modal}>
       <div className={styles.modal_content}>
@@ -15,4 +15,4 @@ function MensagemCadastro({ mensagem, onClose, link }) {
   );
 }
 
-export default MensagemCadastro;
+export default Modal;

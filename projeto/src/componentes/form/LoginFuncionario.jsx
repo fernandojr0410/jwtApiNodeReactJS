@@ -1,53 +1,54 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
-// import MensagemCadastro from "../layout/MenssagemCadastro";
-import Carregamento from "../layout/Carregamento";
-import styles from "./LoginFuncionario.module.css";
+import React, { useState, useEffect } from "react";
+import Modal from "../layout/Modal";
+import styles from "../styles/LoginFuncionario.module.css";
 
 function LoginFuncionario() {
-  const [email, setEmail] = useState("");
+  const [nome, setNome] = useState("");
   const [senha, setSenha] = useState("");
 
-  const [emailError, setEmailError] = useState("");
+  const [nomeError, setNomeError] = useState("");
   const [senhaError, setSenhaError] = useState("");
 
-  const [abrirModal, setAbrirModal] = useState(false);
-  const [menssagemModal, setMenssagemModal] = useState("");
+  const [formularioValido, setFormularioValido] = useState(false);
 
-  // const navigate = useNavigate();
+  const [loginInvalido, setLoginInvalido] = useState(false);
+  const [modalAberto, setModalAberto] = useState(false);
 
-  const [carregamento, setCarregamento] = useState(false);
+  useEffect(() => {
+    validarFormulario();
+  }, [nome, senha, nomeError, senhaError]);
 
-  // Validação E-mail
-  const validarEmail = (valor) => {
-    const emails_permitidos = [
-      "gmail.com",
-      "gmail.com.br",
-      "hotmail.com",
-      "hotmail.com.br",
-      "outlook.com",
-      "outlook.com.br",
-      "yahoo.com",
-      "yahoo.com.br",
-    ];
-
-    const email = valor.split("@");
-    if (email.length !== 2 || !emails_permitidos.includes(email[1])) {
-      setEmailError("E-mail inválido");
+  // Validação Nome
+  const validar_nome = (valor) => {
+    if (valor.match(/\d/)) {
+      setNomeError("O campo nome não pode ter números");
     } else {
-      setEmailError("");
+      setNomeError("");
     }
   };
 
-  const handleSubmit = async (evento) => {
+  const validarFormulario = () => {
+    if (
+      nomeError === "" &&
+      senhaError === "" &&
+      nome !== "" &&
+      senha !== "" &&
+      senha.length >= 6
+    ) {
+      setFormularioValido(true);
+    } else {
+      setFormularioValido(false);
+    }
+  };
+
+  const handleSubmit = (evento) => {
     evento.preventDefault();
 
-    // Validação E-mail
-    if (email === "") {
-      setEmailError("Preencha o e-mail");
+    // Validação Nome
+    if (nome === "") {
+      setNomeError("Preencha o nome");
     } else {
-      validarEmail(email);
+      validar_nome(nome);
     }
 
     // Validação Senha
@@ -57,125 +58,99 @@ function LoginFuncionario() {
       setSenhaError("");
     }
 
-    if (
-      emailError === "" &&
-      senhaError === "" &&
-      email !== "" &&
-      senha !== ""
-    ) {
-      setCarregamento(true);
-
-      try {
-        const response = await fetch(
-          `http://localhost:5000/cadastro_cliente?email=${email}&senha=${senha}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-type": "application/json",
-            },
-          }
-        );
-
-        if (response.status === 200) {
-          const data = await response.json();
-          if (data.length > 0) {
-            setEmail("");
-            setSenha("");
-            // navigate("/home");
-          } else {
-            setMenssagemModal("Conta não encontrada");
-            setAbrirModal(true);
-          }
-        } else if (response.status === 401) {
-          setMenssagemModal("Conta não encontrada");
-          setAbrirModal(true);
-          throw new Error("Falha na autenticação");
-        } else {
-          console.error("Erro desconhecido no servidor");
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setTimeout(() => {
-          setCarregamento(false);
-        }, 2000);
-      }
+    if (nome === "fernandojr" && senha === "0410") {
+      setModalAberto(true);
+    } else {
+      setLoginInvalido(true);
     }
+
+    fetch("http://localhost:6050/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user: "fernandojr",
+        pwd: "0410",
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        localStorage.setItem("userData", JSON.stringify({ token: data.token }));
+      })
+      .catch((error) => {
+        console.error("Erro ao fazer login:", error);
+      });
   };
 
   return (
     <div className={styles.formulario_container}>
       <div className={styles.titulo_formulario}>
-        <h1>LOGIN</h1>
-        {!carregamento ? (
-          <div className={styles.card_formulario_container}>
-            <form onSubmit={handleSubmit}>
-              <div className={styles.informacoes_formulario}>
-                <label className={emailError ? styles.label_error : ""}>
-                  E-mail *
-                </label>
-                <input
-                  type="text"
-                  name="email"
-                  style={{ borderColor: emailError ? "red" : "" }}
-                  placeholder="Digite o seu email..."
-                  value={email}
-                  onChange={(evento) => {
-                    setEmail(evento.target.value);
-                    validarEmail(evento.target.value);
-                  }}
-                />
-                {emailError && (
-                  <span className={styles.error_mensagem}>{emailError}</span>
-                )}
-              </div>
+        <h1>Login</h1>
 
-              <div className={styles.informacoes_formulario}>
-                <label className={senhaError ? styles.label_error : ""}>
-                  Senha *
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  style={{ borderColor: senhaError ? "red" : "" }}
-                  placeholder="Digite sua senha..."
-                  value={senha}
-                  onChange={(evento) => {
-                    setSenha(evento.target.value);
-                  }}
-                />
-                {senhaError && (
-                  <span className={styles.error_mensagem}>{senhaError}</span>
-                )}
-              </div>
+        <div className={styles.card_formulario_container}>
+          <form onSubmit={handleSubmit}>
+            <div className={styles.informacoes_formulario}>
+              <label className={nomeError ? styles.label_error : ""}>
+                Nome *
+              </label>
+              <input
+                type="text"
+                name="nome"
+                style={{ borderColor: nomeError ? "red" : "" }}
+                placeholder="Digite o seu nome..."
+                value={nome}
+                onChange={(evento) => {
+                  setNome(evento.target.value);
+                  validar_nome(evento.target.value);
+                }}
+              />
+              {nomeError && (
+                <span className={styles.error_mensagem}>{nomeError}</span>
+              )}
+            </div>
 
-              <div className={styles.informacoes_formulario}>
-                <div className={styles.button_formulario}>
-                  <button type="submit">Entrar</button>
-                </div>
-              </div>
+            <div className={styles.informacoes_formulario}>
+              <label className={senhaError ? styles.label_error : ""}>
+                Senha *
+              </label>
+              <input
+                type="password"
+                name="password"
+                style={{ borderColor: senhaError ? "red" : "" }}
+                placeholder="Digite sua senha..."
+                value={senha}
+                onChange={(evento) => {
+                  setSenha(evento.target.value);
+                }}
+              />
+              {senhaError && (
+                <span className={styles.error_mensagem}>{senhaError}</span>
+              )}
+            </div>
 
-              <div className={styles.conta_formulario}>
-                <span>Ainda não tem conta?</span>
-                <div className={styles.conta}>
-                  <Link to="/matricula">
-                    <button>Cadastre-se</button>
-                  </Link>
-                </div>
+            <div className={styles.informacoes_formulario}>
+              <div className={styles.button_formulario}>
+                <button type="submit">Entrar</button>
               </div>
-            </form>
-          </div>
-        ) : (
-          <Carregamento />
-        )}
+            </div>
+          </form>
+        </div>
       </div>
-
-      {/* {abrirModal && !carregamento && (
-        <MensagemCadastro
-          mensagem={menssagemModal}
-          onClose={() => setAbrirModal(false)}
+      {loginInvalido && (
+        <Modal
+          mensagem="Login não válido. Verifique o usuário e a senha."
+          onClose={() => setLoginInvalido(false)}
         />
-      )} */}
+      )}
+
+      {modalAberto && (
+        <Modal
+          mensagem="Login validado com sucesso!"
+          onClose={() => setModalAberto(false)}
+          link="/funcionarios"
+        />
+      )}
     </div>
   );
 }
