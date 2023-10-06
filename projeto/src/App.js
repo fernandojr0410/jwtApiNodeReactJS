@@ -8,10 +8,13 @@ import Clientes from "./componentes/pages/Clientes";
 import Pedidos from "./componentes/pages/Pedidos";
 import Contas from "./componentes/pages/Contas";
 import Relatorios from "./componentes/pages/Relatorios";
-import FiltrarFuncionarios from "./componentes/form/FiltrarFuncionarios";
-import FiltrarFuncionariosId from "./componentes/form/FiltrarFuncionariosId";
-import CadastrarFuncionario from "./componentes/form/CadastrarFuncionario";
-import LoginFuncionario from "./componentes/form/LoginFuncionario";
+import LoginFuncionario from "./componentes/form//funcionarios/LoginFuncionario";
+import FiltrarFuncionarios from "./componentes/form//funcionarios/FiltrarFuncionarios";
+import FiltrarFuncionariosId from "./componentes/form//funcionarios/FiltrarFuncionariosId";
+import CadastrarFuncionarios from "./componentes/form/funcionarios/CadastrarFuncionarios";
+import AtualizarFuncionarios from "./componentes/form/funcionarios/AtualizarFuncionarios";
+import DeletarFuncionariosId from "./componentes/form//funcionarios/DeletarFuncionariosId";
+import ModalFuncionarios from "./componentes/layout/ModalFuncionarios";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -43,8 +46,23 @@ function App() {
         />
         <Route
           exact
-          path="/cadastrarFuncionario"
-          element={<CadastrarFuncionario token={token} />}
+          path="/cadastrarFuncionarios"
+          element={<CadastrarFuncionarios token={token} />}
+        />
+        <Route
+          exact
+          path="/atualizarFuncionarios"
+          element={<AtualizarFuncionarios token={token} />}
+        />
+        <Route
+          exact
+          path="/deletarFuncionariosId"
+          element={<DeletarFuncionariosId token={token} />}
+        />
+        <Route
+          exact
+          path="/modalFuncionarios"
+          element={<ModalFuncionarios token={token} />}
         />
         <Route exact path="/clientes" element={<Clientes token={token} />} />
         <Route exact path="/pedidos" element={<Pedidos token={token} />} />

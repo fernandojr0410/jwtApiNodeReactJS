@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Modal from "../layout/Modal";
-import styles from "../styles/LoginFuncionario.module.css";
+import Modal from "../../layout/Modal";
+import styles from "../../styles/LoginFuncionario.module.css";
 
 function LoginFuncionario() {
   const [nome, setNome] = useState("");

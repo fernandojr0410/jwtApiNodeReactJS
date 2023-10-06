@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import styles from "../styles/FiltrarFuncionario.module.css";
+import Modal from "../../layout/Modal";
+import styles from "../../styles/FiltrarFuncionario.module.css";
 
-function FiltrarFuncionarios() {
+function FiltrarFuncionarios({ modalFuncionarios }) {
   const [nome, setNome] = useState("");
 
   const [nomeError, setNomeError] = useState("");
@@ -14,16 +15,17 @@ function FiltrarFuncionarios() {
 
   const [formularioValido, setFormularioValido] = useState(false);
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [funcionarios, setFuncionarios] = useState([]);
 
   const { token } = JSON.parse(localStorage.getItem("userData"));
 
   const openModal = () => {
-    setModalVisible(true);
+    setModalAberto(true);
   };
 
   const closeModal = () => {
-    setModalVisible(false);
+    setModalAberto(false);
   };
 
   const formatCPF = (value) => {
@@ -111,7 +113,9 @@ function FiltrarFuncionarios() {
         return response.json();
       })
       .then((data) => {
+        modalFuncionarios = data;
         console.log(data);
+        openModal();
       })
       .catch((error) => {
         console.error("Erro ao buscar funcionário:", error);
@@ -201,6 +205,13 @@ function FiltrarFuncionarios() {
           </form>
         </div>
       </div>
+      {modalAberto && (
+        <Modal
+          mensagem="Funcionários listados com sucesso!"
+          onClose={() => setModalAberto(false)}
+          link="/modalFuncionarios"
+        />
+      )}
     </div>
   );
 }

@@ -19,13 +19,13 @@ function Funcionarios({ token }) {
             <span>Filtrar Funcionários ID</span>
           </Link>
 
-          <Link to="/cadastrarFuncionario">
+          <Link to="/cadastrarFuncionarios">
             <span>Cadastrar Funcionários</span>
           </Link>
-          <Link>
+          <Link to="/atualizarFuncionarios">
             <span>Atualizar Funcionários</span>
           </Link>
-          <Link>
+          <Link to="/deletarFuncionariosId" token={token}>
             <span>Deletar Funcionários</span>
           </Link>
         </div>

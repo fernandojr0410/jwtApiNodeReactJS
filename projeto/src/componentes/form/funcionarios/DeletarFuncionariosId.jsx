@@ -3,13 +3,15 @@ import { useState, useEffect } from "react";
 // import { Navigate } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
 // import Carregamento from "../layout/Carregamento";
-import styles from "../styles/FiltrarFuncionario.module.css";
+import styles from "../../styles/FiltrarFuncionario.module.css";
 
-function FiltrarFuncionariosId({ token }) {
+function DeletarFuncionariosId() {
   const [idFuncionario, setIdFuncionario] = useState("");
   const [idFuncionarioError, setIdFuncionarioError] = useState("");
 
   const [formularioValido, setFormularioValido] = useState(false);
+
+  const { token } = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
     validarFormulario();
@@ -32,25 +34,32 @@ function FiltrarFuncionariosId({ token }) {
       setIdFuncionarioError("");
     }
 
-    fetch(`http://localhost:6050/funcionarios/findById?id=${idFuncionario}`, {
-      method: "GET",
+    if (idFuncionario === "") {
+      console.error("Nenhum ID foi especificado para exclusão.");
+      return;
+    }
+
+    const idDelete = idFuncionario.split(",").map((id) => parseInt(id.trim()));
+
+    fetch(`http://localhost:6050/funcionarios/delete?id=${idFuncionario}`, {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         "x-access-token": token,
       },
+      body: JSON.stringify({ ids: idDelete }),
     })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Erro na solicitação.");
         }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
+
+        if (response.status === 200) {
+          console.log("Funcionário deletado com sucesso!");
+        }
       })
       .catch((error) => {
-        console.error("Erro ao buscar funcionário:", error);
-        console.log(token);
+        console.error("Erro ao excluir o funcionário:", error);
       });
   };
 
@@ -61,7 +70,7 @@ function FiltrarFuncionariosId({ token }) {
   return (
     <div className={styles.formulario_container}>
       <div className={styles.titulo_formulario}>
-        <h1>Filtrar Funcionário ID</h1>
+        <h1>Deletar Funcionários ID</h1>
 
         <div className={styles.card_formulario_container}>
           <form onSubmit={handleSubmit}>
@@ -86,7 +95,7 @@ function FiltrarFuncionariosId({ token }) {
 
             <div className={styles.informacoes_formulario}>
               <div className={styles.button_formulario}>
-                <button type="submit">Filtrar</button>
+                <button type="submit">Deletar</button>
               </div>
             </div>
           </form>
@@ -96,4 +105,4 @@ function FiltrarFuncionariosId({ token }) {
   );
 }
 
-export default FiltrarFuncionariosId;
+export default DeletarFuncionariosId;

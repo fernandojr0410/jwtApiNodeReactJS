@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
-import Modal from "../layout/Modal";
-import styles from "../styles/FiltrarFuncionario.module.css";
+import Modal from "../../layout/Modal";
+import styles from "../../styles/FiltrarFuncionario.module.css";
 
-function CadastrarFuncionario() {
+function AtualizarFuncionarios() {
   const [nome, setNome] = useState("");
+
+  const [idFuncionario, setIdFuncionario] = useState("");
+
+  const [idFuncionarioError, setIdFuncionarioError] = useState("");
 
   const [nomeError, setNomeError] = useState("");
 
@@ -11,13 +15,10 @@ function CadastrarFuncionario() {
 
   const [cpfError, setCpfError] = useState("");
 
-  const [ativo, setAtivo] = useState("");
+  const [ativo, setAtivo] = useState(false);
 
   const [ativoError, setAtivoError] = useState("");
 
-  const [formularioValido, setFormularioValido] = useState(false);
-
-  // const [cadastroConcluido, setCadastroConcluido] = useState(false);
   const [modalAberto, setModalAberto] = useState(false);
 
   const { token } = JSON.parse(localStorage.getItem("userData"));
@@ -41,10 +42,6 @@ function CadastrarFuncionario() {
     return formattedValue;
   };
 
-  useEffect(() => {
-    validarFormulario();
-  }, [nome, cpf, ativo, ativoError, nomeError, cpfError]);
-
   // Validação Nome
   const validar_nome = (valor) => {
     if (valor.match(/\d/)) {
@@ -54,79 +51,52 @@ function CadastrarFuncionario() {
     }
   };
 
-  const validarFormulario = () => {
-    if (
-      nomeError === "" &&
-      nome !== "" &&
-      ativoError === "" &&
-      ativo !== "" &&
-      cpfError === "" &&
-      cpf !== "" &&
-      cpf.length >= 14
-    ) {
-      setFormularioValido(true);
-    } else {
-      setFormularioValido(false);
-    }
-  };
-
   const handleSubmit = (evento) => {
     evento.preventDefault();
 
-    // Validação Nome
-    if (nome === "") {
-      setNomeError("Preencha o nome");
+    if (idFuncionario === "") {
+      setIdFuncionarioError("Insira o ID do Funcionário");
     } else {
-      validar_nome(nome);
+      setIdFuncionarioError("");
     }
 
-    if (ativo === "") {
-      setAtivoError("Selecione o status");
-    } else {
-      setAtivoError("");
+    const camposAtualizados = {};
+    if (idFuncionario !== "") {
+      camposAtualizados.idFuncionario = idFuncionario;
+    }
+    if (nome !== "") {
+      camposAtualizados.nome = nome;
+    }
+    if (cpf !== "") {
+      camposAtualizados.cpf = cpf;
+    }
+    if (ativo !== "") {
+      camposAtualizados.ativo = ativo;
     }
 
-    // Validação CPF
-    if (cpf === "") {
-      setCpfError("Preencha a cpf");
-    } else if (cpf.length !== 14) {
-      setCpfError("Cpf precisa ter no minimo 11 caracteres");
-    } else {
-      setCpfError("");
-    }
-  };
+    console.log("ID Funcionário antes da requisição:", idFuncionario);
+    console.log("Nome Funcionário antes da requisição:", nome);
+    console.log("cpf Funcionário antes da requisição:", cpf);
+    console.log("ativo Funcionário antes da requisição:", ativo);
 
-  if (formularioValido) {
-    const funcionarioData = {
-      nome: nome,
-      cpf: cpf,
-      ativo: ativo,
-    };
-
-    
-
-    fetch("http://localhost:6050/funcionarios/insert", {
-      method: "POST",
+    fetch(`http://localhost:6050/funcionarios/update/${idFuncionario}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "x-access-token": token,
       },
-      body: JSON.stringify(funcionarioData),
+      body: JSON.stringify(camposAtualizados),
     })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Erro na solicitação.");
         }
-        return response.json();
+        if (response.status === 200) {
+          console.log("Registro atualizado com sucesso!");
+        }
       })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Erro ao cadastrar funcionário:", error);
-        console.log(token);
-      });
-  }
+      .catch((error) => console.error(error));
+  };
 
   const handleCpfChange = (event) => {
     const formattedCpf = formatCPF(event.target.value);
@@ -138,13 +108,36 @@ function CadastrarFuncionario() {
     console.log("Valor do status:", event.target.value);
   };
 
+  const handleIdFuncionarioChange = (event) => {
+    setIdFuncionario(event.target.value);
+  };
+
   return (
     <div className={styles.formulario_container}>
       <div className={styles.titulo_formulario}>
-        <h1>CADASTRO DE FUNCIONÁRIO</h1>
+        <h1>Atualizar Funcionários</h1>
 
         <div className={styles.card_formulario_container}>
           <form onSubmit={handleSubmit}>
+            <div className={styles.informacoes_formulario}>
+              <label className={idFuncionarioError ? styles.label_error : ""}>
+                ID Funcionário *
+              </label>
+              <input
+                type="text"
+                name="idFuncionario"
+                style={{ borderColor: idFuncionarioError ? "red" : "" }}
+                placeholder="Digite o Id Funcionário..."
+                value={idFuncionario}
+                onChange={handleIdFuncionarioChange}
+              />
+              {idFuncionarioError && (
+                <span className={styles.error_mensagem}>
+                  {idFuncionarioError}
+                </span>
+              )}
+            </div>
+
             <div className={styles.informacoes_formulario}>
               <label className={nomeError ? styles.label_error : ""}>
                 Nome *
@@ -183,23 +176,21 @@ function CadastrarFuncionario() {
             </div>
 
             <div className={styles.informacoes_formulario}>
-              <label className={cpfError ? styles.label_error : ""}>
+              <label className={ativoError ? styles.label_error : ""}>
                 Status *
               </label>
               <select
                 name="ativo"
-                style={{ borderColor: cpfError ? "red" : "" }}
+                style={{ borderColor: ativoError ? "red" : "" }}
                 value={ativo}
                 onChange={handleAtivoChange}
               >
-                <option value="" disabled hidden>
-                  Selecione o status
-                </option>
+                <option value="">Selecione o novo status</option>
                 <option value="1">Ativo</option>
                 <option value="0">Inativo</option>
               </select>
-              {cpfError && (
-                <span className={styles.error_mensagem}>{cpfError}</span>
+              {ativoError && (
+                <span className={styles.error_mensagem}>{ativoError}</span>
               )}
             </div>
 
@@ -214,7 +205,7 @@ function CadastrarFuncionario() {
 
       {modalAberto && (
         <Modal
-          mensagem="Funcionário cadastrado com sucesso!"
+          mensagem="Funcionário atualizado com sucesso!"
           onClose={() => setModalAberto(false)}
           link="/funcionarios"
         />
@@ -223,4 +214,4 @@ function CadastrarFuncionario() {
   );
 }
 
-export default CadastrarFuncionario;
+export default AtualizarFuncionarios;
