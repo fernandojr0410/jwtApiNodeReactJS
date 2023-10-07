@@ -1,44 +1,62 @@
 import React from "react";
 import styles from "../../styles/ListaFuncionarios.module.css";
 
-function ListaPedidos({ pedidos }) {
+function ListaContas({ contas }) {
   return (
     <div className={styles.lista_funcionario_container}>
-      <h2 className={styles.lista_funcionario_titulo}>Lista de Pedidos</h2>
+      <h2 className={styles.lista_funcionario_titulo}>Lista de Contas</h2>
 
       <table className={styles.tabela_funcionarios_container}>
         <thead className={styles.tabela_funcionarios_cabecalho}>
           <tr>
             <th className={styles.tabela_funcionarios_cabecalho_item}>
-              Id_Pedido
+              id_conta
             </th>
             <th className={styles.tabela_funcionarios_cabecalho_item}>
-              Id_Funcionario
+              status
             </th>
             <th className={styles.tabela_funcionarios_cabecalho_item}>
-              Id_Cliente
+              quantidade_pessoa
             </th>
             <th className={styles.tabela_funcionarios_cabecalho_item}>
-              Status
+              total_conta
+            </th>
+            <th className={styles.tabela_funcionarios_cabecalho_item}>
+              valor_individual
+            </th>
+            <th className={styles.tabela_funcionarios_cabecalho_item}>
+              pagamento
+            </th>
+            <th className={styles.tabela_funcionarios_cabecalho_item}>
+              observacao
             </th>
           </tr>
         </thead>
         <tbody className={styles.tabela_funcionarios_linha}>
-          {pedidos ? (
-            pedidos.dados?.map((pedido) => {
+          {contas ? (
+            contas.dados?.map((conta) => {
               return (
-                <tr key={pedido.id_pedido}>
+                <tr key={conta.id_conta}>
                   <td className={styles.tabela_funcionarios_informacao}>
-                    {pedido.id_pedido}
+                    {conta.id_conta}
                   </td>
                   <td className={styles.tabela_funcionarios_informacao}>
-                    {pedido.id_funcionario}
+                    {conta.status}
                   </td>
                   <td className={styles.tabela_funcionarios_informacao}>
-                    {pedido.id_cliente}
+                    {conta.quantidade_pessoa}
                   </td>
                   <td className={styles.tabela_funcionarios_informacao}>
-                    {pedido.status}
+                    {conta.total_conta}
+                  </td>
+                  <td className={styles.tabela_funcionarios_informacao}>
+                    {conta.valor_individual}
+                  </td>
+                  <td className={styles.tabela_funcionarios_informacao}>
+                    {conta.pagamento}
+                  </td>
+                  <td className={styles.tabela_funcionarios_informacao}>
+                    {conta.observacao}
                   </td>
                 </tr>
               );
@@ -46,7 +64,7 @@ function ListaPedidos({ pedidos }) {
           ) : (
             <tr>
               <td colSpan="4" className={styles.tabela_funcionarios_mensagem}>
-                Nenhum pedido encontrado.
+                Nenhuma conta encontrada.
               </td>
             </tr>
           )}
@@ -56,4 +74,4 @@ function ListaPedidos({ pedidos }) {
   );
 }
 
-export default ListaPedidos;
+export default ListaContas;

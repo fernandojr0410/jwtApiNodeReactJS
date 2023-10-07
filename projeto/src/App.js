@@ -20,18 +20,24 @@ import FiltrarCliente from "./componentes/form/cliente/FiltrarCliente";
 import CadastrarCliente from "./componentes/form/cliente/CadastrarCliente";
 import AtualizarClientes from "./componentes/form/cliente/AtualizarClientes";
 import DeletarClientesId from "./componentes/form/cliente/DeletarClientesId";
+import ListaClientes from "./componentes/form/cliente/ListaClientes";
 
 import FiltrarProdutos from "./componentes/form/produtos/FiltrarProdutos";
 import CadastrarProdutos from "./componentes/form/produtos/CadastrarProdutos";
-import ListaClientes from "./componentes/form/cliente/ListaClientes";
 import AtualizarProdutos from "./componentes/form/produtos/AtualizarProdutos";
 import DeletarProdutosId from "./componentes/form/produtos/DeletarProdutosId";
 import ListaProdutos from "./componentes/form/produtos/ListaProdutos";
+
 import Pedidos from "./componentes/pages/Pedidos";
 import FiltrarPedidos from "./componentes/form/pedidos/FiltrarPedidos";
 import CadastrarPedidos from "./componentes/form/pedidos/CadastrarPedidos";
 import AtualizarPedidos from "./componentes/form/pedidos/AtualizarPedidos";
 import DeletarPedidosId from "./componentes/form/pedidos/DeletarPedidosId";
+import ListaPedidos from "./componentes/form/pedidos/ListaPedidos";
+
+import FiltrarContas from "./componentes/form/conta/FiltrarContas";
+import ListaContas from "./componentes/form/conta/ListaContas";
+import CadastrarContas from "./componentes/form/conta/CadastrarContas";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -139,8 +145,8 @@ function App() {
 
         <Route
           exact
-          path="/listaProdutos"
-          element={<ListaProdutos token={token} />}
+          path="/listaPedidos"
+          element={<ListaPedidos token={token} />}
         />
 
         <Route
@@ -162,6 +168,25 @@ function App() {
         />
 
         <Route exact path="/contas" element={<Contas token={token} />} />
+
+        <Route
+          exact
+          path="/filtrarContas"
+          element={<FiltrarContas token={token} />}
+        />
+
+        <Route
+          exact
+          path="/listaContas"
+          element={<ListaContas token={token} />}
+        />
+
+        <Route
+          exact
+          path="/cadastrarContas"
+          element={<CadastrarContas token={token} />}
+        />
+
         <Route
           exact
           path="/relatorios"
