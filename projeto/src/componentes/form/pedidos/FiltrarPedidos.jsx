@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
-import ListaFuncionarios from "./ListaFuncionarios";
+import ListaPedidos from "./ListaPedidos";
 import Modal from "../../layout/Modal";
 import styles from "../../styles/FiltrarFuncionario.module.css";
 
-function FiltrarFuncionarios() {
-  const [funcionarios, setFuncionarios] = useState([]);
-  const [idFuncionario, setIdFuncionario] = useState("");
-  const [funcionarioInvalido, setFuncionarioInvalido] = useState(false);
+function FiltrarPedidos() {
+  const [pedidos, setPedidos] = useState([]);
+  const [idPedido, setIdPedido] = useState("");
+  const [PedidoInvalido, setPedidoInvalido] = useState(false);
 
   const { token } = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
-    fetch("http://localhost:6050/funcionarios/findAll", {
+    fetch("http://localhost:6050/pedidos/findAll", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -25,17 +25,17 @@ function FiltrarFuncionarios() {
         return response.json();
       })
       .then((data) => {
-        setFuncionarios(data);
+        setPedidos(data);
       })
       .catch((error) => {
-        console.error("Erro ao buscar funcionário:", error);
+        console.error("Erro ao buscar Pedido:", error);
       });
   }, []);
 
-  const buscarFuncionariosId = () => {
-    if (!idFuncionario) return;
+  const buscarPedidoId = () => {
+    if (!idPedido) return;
 
-    fetch(`http://localhost:6050/funcionarios/findById?id=${idFuncionario}`, {
+    fetch(`http://localhost:6050/pedidos/findById?id=${idPedido}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -50,10 +50,10 @@ function FiltrarFuncionarios() {
       })
       .then((data) => {
         if (!data || !data.dados || data.dados.length === 0) {
-          setFuncionarioInvalido(true);
+          setPedidoInvalido(true);
         } else {
-          setFuncionarioInvalido(false);
-          setFuncionarios(data);
+          setPedidoInvalido(false);
+          setPedidos(data);
         }
       })
       .catch((error) => {
@@ -61,38 +61,38 @@ function FiltrarFuncionarios() {
       });
   };
 
-  const handleIdFuncionarioChange = (event) => {
-    setIdFuncionario(event.target.value);
+  const handleIdPedidoChange = (event) => {
+    setIdPedido(event.target.value);
   };
 
   return (
     <div className={styles.formulario_container}>
       <small className={styles.usuario}>
-        <span>Usuário:</span> {funcionarios?.dadosUsuario?.nome}
+        <span>Usuário:</span> {pedidos?.dadosUsuario?.nome}
       </small>
       <div className={styles.input_funcionario_id}>
         <input
           type="input"
-          name="idFuncionario"
-          placeholder="Digite o Id Funcionário..."
-          value={idFuncionario}
-          onChange={handleIdFuncionarioChange}
+          name="idPedido"
+          placeholder="Digite o Id Pedido..."
+          value={idPedido}
+          onChange={handleIdPedidoChange}
         />
-        <button type="button" onClick={buscarFuncionariosId}>
+        <button type="button" onClick={buscarPedidoId}>
           Buscar
         </button>
       </div>
 
-      {funcionarioInvalido && (
+      {PedidoInvalido && (
         <Modal
-          mensagem="Funcionário não encontrado. Tente novamente."
-          onClose={() => setFuncionarioInvalido(false)}
+          mensagem="Pedido não encontrado. Tente novamente."
+          onClose={() => setPedidoInvalido(false)}
         />
       )}
 
-      <ListaFuncionarios funcionarios={funcionarios} />
+      <ListaPedidos pedidos={pedidos} />
     </div>
   );
 }
 
-export default FiltrarFuncionarios;
+export default FiltrarPedidos;

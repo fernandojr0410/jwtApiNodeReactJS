@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Modal from "../../layout/Modal";
 import styles from "../../styles/FiltrarFuncionario.module.css";
 
-function CadastrarFuncionarios() {
+function AtualizarClientes() {
   const [nome, setNome] = useState("");
+  const [idCliente, setIdCliente] = useState("");
+  const [idClienteError, setIdClienteError] = useState("");
   const [nomeError, setNomeError] = useState("");
   const [cpf, setCpf] = useState("");
   const [cpfError, setCpfError] = useState("");
   const [ativo, setAtivo] = useState(false);
   const [ativoError, setAtivoError] = useState("");
-  const [formularioValido, setFormularioValido] = useState(false);
-  const [cadastroConcluido, setCadastroConcluido] = useState(false);
   const [modalAberto, setModalAberto] = useState(false);
+  const [cliente, setCliente] = useState([]);
+  const [erroAoAtualizar, setErroAoAtualizar] = useState(false);
 
   const { token } = JSON.parse(localStorage.getItem("userData"));
 
@@ -34,10 +36,6 @@ function CadastrarFuncionarios() {
     return formattedValue;
   };
 
-  useEffect(() => {
-    validarFormulario();
-  }, [nome, cpf, ativo, ativoError, nomeError, cpfError]);
-
   // Validação Nome
   const validar_nome = (valor) => {
     if (valor.match(/\d/)) {
@@ -47,71 +45,52 @@ function CadastrarFuncionarios() {
     }
   };
 
-  const validarFormulario = () => {
-    if (
-      nomeError === "" &&
-      nome !== "" &&
-      ativoError === "" &&
-      ativo !== "" &&
-      cpfError === "" &&
-      cpf !== "" &&
-      cpf.length >= 14
-    ) {
-      setFormularioValido(true);
-    } else {
-      setFormularioValido(false);
-    }
-  };
-
   const handleSubmit = (evento) => {
     evento.preventDefault();
 
-    // Validação Nome
-    if (nome === "") {
-      setNomeError("Preencha o nome");
+    if (idCliente === "") {
+      setIdClienteError("Insira o ID do Cliente");
     } else {
-      validar_nome(nome);
+      setIdClienteError("");
     }
 
-    if (ativo === "") {
-      setAtivoError("Selecione o status");
-    } else {
-      setAtivoError("");
+    const camposAtualizados = {};
+    if (idCliente !== "") {
+      camposAtualizados.idCliente = idCliente;
+    }
+    if (nome !== "") {
+      camposAtualizados.nome = nome;
+    }
+    if (cpf !== "") {
+      camposAtualizados.cpf = cpf;
+    }
+    if (ativo !== "") {
+      camposAtualizados.ativo = ativo;
     }
 
-    // Validação CPF
-    if (cpf === "") {
-      setCpfError("Preencha a cpf");
-    } else if (cpf.length !== 14) {
-      setCpfError("Cpf precisa ter no minimo 11 caracteres");
-    } else {
-      setCpfError("");
-    }
-
-    const ativoNumerico = ativo === "1" ? 1 : 0;
-
-    const dadosFuncionarios = {
-      method: "POST",
+    fetch(`http://localhost:6050/clientes/update/${idCliente}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "x-access-token": token,
       },
-      body: JSON.stringify({ nome: nome, cpf: cpf, ativo: ativoNumerico }),
-    };
-
-    fetch("http://localhost:6050/funcionarios/insert", dadosFuncionarios)
+      body: JSON.stringify(camposAtualizados),
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Erro na solicitação.");
         }
-
         if (response.status === 200) {
-          console.log("Funcionário cadastrado com sucesso!");
-          setCadastroConcluido(true);
+          console.log("Registro atualizado com sucesso!");
+          setCliente(true);
           setModalAberto(true);
         }
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setErroAoAtualizar(true);
+        setModalAberto(true);
+      });
   };
 
   const handleCpfChange = (event) => {
@@ -124,13 +103,34 @@ function CadastrarFuncionarios() {
     console.log("Valor do status:", event.target.value);
   };
 
+  const handleIdClienteChange = (event) => {
+    setIdCliente(event.target.value);
+  };
+
   return (
     <div className={styles.formulario_container}>
       <div className={styles.titulo_formulario}>
-        <h1>Cadastro de Funcionários</h1>
+        <h1>Atualizar Clientes</h1>
 
         <div className={styles.card_formulario_container}>
           <form onSubmit={handleSubmit}>
+            <div className={styles.informacoes_formulario}>
+              <label className={idClienteError ? styles.label_error : ""}>
+                ID Cliente *
+              </label>
+              <input
+                type="text"
+                name="idCliente"
+                style={{ borderColor: idClienteError ? "red" : "" }}
+                placeholder="Digite o Id Cliente..."
+                value={idCliente}
+                onChange={handleIdClienteChange}
+              />
+              {idClienteError && (
+                <span className={styles.error_mensagem}>{idClienteError}</span>
+              )}
+            </div>
+
             <div className={styles.informacoes_formulario}>
               <label className={nomeError ? styles.label_error : ""}>
                 Nome *
@@ -178,7 +178,7 @@ function CadastrarFuncionarios() {
                 value={ativo}
                 onChange={handleAtivoChange}
               >
-                <option value="">Selecione o status</option>
+                <option value="">Selecione o novo status</option>
                 <option value="1">Ativo</option>
                 <option value="0">Inativo</option>
               </select>
@@ -189,7 +189,7 @@ function CadastrarFuncionarios() {
 
             <div className={styles.informacoes_formulario}>
               <div className={styles.button_formulario}>
-                <button type="submit">Cadastrar</button>
+                <button type="submit">Atualizar</button>
               </div>
             </div>
           </form>
@@ -198,13 +198,20 @@ function CadastrarFuncionarios() {
 
       {modalAberto && (
         <Modal
-          mensagem="Funcionário cadastrado com sucesso!"
+          mensagem="Cliente atualizado com sucesso!"
           onClose={() => setModalAberto(false)}
-          link="/funcionarios"
+          link="/clientes"
+        />
+      )}
+
+      {erroAoAtualizar && (
+        <Modal
+          mensagem="Erro ao atualizar cliente. Tente novamente."
+          onClose={() => setErroAoAtualizar(false)}
         />
       )}
     </div>
   );
 }
 
-export default CadastrarFuncionarios;
+export default AtualizarClientes;

@@ -2,11 +2,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   background-color: #04709f;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  height: 82%;
 }
 
 .titulo_formulario {
@@ -112,4 +112,39 @@
 
 .label_error {
   color: red;
+}
+
+.usuario {
+  font-size: 20px;
+  font-weight: bold;
+  padding-top: 1rem;
+}
+
+.usuario span {
+  color: #fff;
+}
+
+.input_funcionario_id {
+  display: flex;
+  gap: 6px;
+  padding: 1rem;
+}
+
+.input_funcionario_id input {
+  display: flex;
+  height: 40px;
+  padding: 1em;
+  outline: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.input_funcionario_id button {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
 }

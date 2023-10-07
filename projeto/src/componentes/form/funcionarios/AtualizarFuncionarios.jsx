@@ -1,25 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Modal from "../../layout/Modal";
 import styles from "../../styles/FiltrarFuncionario.module.css";
 
 function AtualizarFuncionarios() {
   const [nome, setNome] = useState("");
-
   const [idFuncionario, setIdFuncionario] = useState("");
-
   const [idFuncionarioError, setIdFuncionarioError] = useState("");
-
   const [nomeError, setNomeError] = useState("");
-
   const [cpf, setCpf] = useState("");
-
   const [cpfError, setCpfError] = useState("");
-
   const [ativo, setAtivo] = useState(false);
-
   const [ativoError, setAtivoError] = useState("");
-
   const [modalAberto, setModalAberto] = useState(false);
+  const [funcionarios, setFuncionarios] = useState([]);
+  const [erroAoAtualizar, setErroAoAtualizar] = useState(false);
 
   const { token } = JSON.parse(localStorage.getItem("userData"));
 
@@ -74,10 +68,10 @@ function AtualizarFuncionarios() {
       camposAtualizados.ativo = ativo;
     }
 
-    console.log("ID Funcionário antes da requisição:", idFuncionario);
-    console.log("Nome Funcionário antes da requisição:", nome);
-    console.log("cpf Funcionário antes da requisição:", cpf);
-    console.log("ativo Funcionário antes da requisição:", ativo);
+    // console.log("ID Funcionário antes da requisição:", idFuncionario);
+    // console.log("Nome Funcionário antes da requisição:", nome);
+    // console.log("cpf Funcionário antes da requisição:", cpf);
+    // console.log("ativo Funcionário antes da requisição:", ativo);
 
     fetch(`http://localhost:6050/funcionarios/update/${idFuncionario}`, {
       method: "PUT",
@@ -93,9 +87,15 @@ function AtualizarFuncionarios() {
         }
         if (response.status === 200) {
           console.log("Registro atualizado com sucesso!");
+          setFuncionarios(true);
+          setModalAberto(true);
         }
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setErroAoAtualizar(true);
+        setModalAberto(true);
+      });
   };
 
   const handleCpfChange = (event) => {
@@ -196,7 +196,7 @@ function AtualizarFuncionarios() {
 
             <div className={styles.informacoes_formulario}>
               <div className={styles.button_formulario}>
-                <button type="submit">Cadastrar</button>
+                <button type="submit">Atualizar</button>
               </div>
             </div>
           </form>
@@ -208,6 +208,13 @@ function AtualizarFuncionarios() {
           mensagem="Funcionário atualizado com sucesso!"
           onClose={() => setModalAberto(false)}
           link="/funcionarios"
+        />
+      )}
+
+      {erroAoAtualizar && (
+        <Modal
+          mensagem="Erro ao atualizar funcionário. Tente novamente."
+          onClose={() => setErroAoAtualizar(false)}
         />
       )}
     </div>

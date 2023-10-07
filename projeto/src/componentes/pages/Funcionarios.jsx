@@ -15,14 +15,10 @@ function Funcionarios({ token }) {
             <span>Filtrar Funcionários</span>
           </Link>
 
-          <Link to="/filtrarFuncionariosId" token={token}>
-            <span>Filtrar Funcionários ID</span>
-          </Link>
-
-          <Link to="/cadastrarFuncionarios">
+          <Link to="/cadastrarFuncionarios" token={token}>
             <span>Cadastrar Funcionários</span>
           </Link>
-          <Link to="/atualizarFuncionarios">
+          <Link to="/atualizarFuncionarios" token={token}>
             <span>Atualizar Funcionários</span>
           </Link>
           <Link to="/deletarFuncionariosId" token={token}>

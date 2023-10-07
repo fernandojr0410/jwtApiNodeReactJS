@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import Modal from "../../layout/Modal";
 import styles from "../../styles/FiltrarFuncionario.module.css";
 
-function DeletarFuncionariosId() {
-  const [idFuncionario, setIdFuncionario] = useState("");
-  const [idFuncionarioError, setIdFuncionarioError] = useState("");
+function DeletarProdutosId() {
+  const [idProduto, setIdProduto] = useState("");
+  const [idProdutoError, setIdProdutoError] = useState("");
   const [formularioValido, setFormularioValido] = useState(false);
   const [registroDeletado, setRegistroDeletado] = useState(false);
   const [modalAberto, setModalAberto] = useState(false);
@@ -13,10 +13,10 @@ function DeletarFuncionariosId() {
 
   useEffect(() => {
     validarFormulario();
-  }, [idFuncionario, idFuncionarioError]);
+  }, [idProduto, idProdutoError]);
 
   const validarFormulario = () => {
-    if (idFuncionarioError === "" && idFuncionario !== "") {
+    if (idProdutoError === "" && idProduto !== "") {
       setFormularioValido(true);
     } else {
       setFormularioValido(false);
@@ -26,20 +26,20 @@ function DeletarFuncionariosId() {
   const handleSubmit = (evento) => {
     evento.preventDefault();
 
-    if (idFuncionario === "") {
-      setIdFuncionarioError("Insira o ID do Funcionário");
+    if (idProduto === "") {
+      setIdProdutoError("Insira o ID do Produto");
     } else {
-      setIdFuncionarioError("");
+      setIdProdutoError("");
     }
 
-    if (idFuncionario === "") {
+    if (idProduto === "") {
       console.error("Nenhum ID foi especificado para exclusão.");
       return;
     }
 
-    const idDelete = idFuncionario.split(",").map((id) => parseInt(id.trim()));
+    const idDelete = idProduto.split(",").map((id) => parseInt(id.trim()));
 
-    fetch(`http://localhost:6050/funcionarios/delete?id=${idFuncionario}`, {
+    fetch(`http://localhost:6050/produtos/delete?id=${idProduto}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -53,43 +53,41 @@ function DeletarFuncionariosId() {
         }
 
         if (response.status === 200) {
-          console.log("Funcionário deletado com sucesso!");
+          console.log("Produto deletado com sucesso!");
           setRegistroDeletado(true);
           setModalAberto(true);
         }
       })
       .catch((error) => {
-        console.error("Erro ao excluir o funcionário:", error);
+        console.error("Erro ao excluir o produto:", error);
       });
   };
 
-  const handleIdFuncionarioChange = (event) => {
-    setIdFuncionario(event.target.value);
+  const handleIdProdutoChange = (event) => {
+    setIdProduto(event.target.value);
   };
 
   return (
     <div className={styles.formulario_container}>
       <div className={styles.titulo_formulario}>
-        <h1>Deletar Funcionários ID</h1>
+        <h1>Deletar Produtos ID</h1>
 
         <div className={styles.card_formulario_container}>
           <form onSubmit={handleSubmit}>
             <div className={styles.informacoes_formulario}>
-              <label className={idFuncionarioError ? styles.label_error : ""}>
-                ID Funcionário *
+              <label className={idProdutoError ? styles.label_error : ""}>
+                ID Produto *
               </label>
               <input
                 type="text"
-                name="idFuncionario"
-                style={{ borderColor: idFuncionarioError ? "red" : "" }}
-                placeholder="Digite o Id Funcionário..."
-                value={idFuncionario}
-                onChange={handleIdFuncionarioChange}
+                name="idProduto"
+                style={{ borderColor: idProdutoError ? "red" : "" }}
+                placeholder="Digite o Id Produto..."
+                value={idProduto}
+                onChange={handleIdProdutoChange}
               />
-              {idFuncionarioError && (
-                <span className={styles.error_mensagem}>
-                  {idFuncionarioError}
-                </span>
+              {idProdutoError && (
+                <span className={styles.error_mensagem}>{idProdutoError}</span>
               )}
             </div>
 
@@ -103,13 +101,13 @@ function DeletarFuncionariosId() {
       </div>
       {modalAberto && (
         <Modal
-          mensagem="Funcionário deletado com sucesso!"
+          mensagem="Produto deletado com sucesso!"
           onClose={() => setModalAberto(false)}
-          link="/funcionarios"
+          link="/produtos"
         />
       )}
     </div>
   );
 }
 
-export default DeletarFuncionariosId;
+export default DeletarProdutosId;

@@ -22,6 +22,10 @@ function Header() {
           <li className={styles.item}>Clientes</li>
         </Link>
 
+        <Link to="/produtos">
+          <li className={styles.item}>Produtos</li>
+        </Link>
+
         <Link to="/pedidos">
           <li className={styles.item}>Pedidos</li>
         </Link>

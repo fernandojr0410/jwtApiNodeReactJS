@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Modal from "../../layout/Modal";
 import styles from "../../styles/FiltrarFuncionario.module.css";
 
-function CadastrarFuncionarios() {
+function CadastrarCliente() {
   const [nome, setNome] = useState("");
   const [nomeError, setNomeError] = useState("");
   const [cpf, setCpf] = useState("");
@@ -90,7 +90,7 @@ function CadastrarFuncionarios() {
 
     const ativoNumerico = ativo === "1" ? 1 : 0;
 
-    const dadosFuncionarios = {
+    const dadosClientes = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -99,14 +99,14 @@ function CadastrarFuncionarios() {
       body: JSON.stringify({ nome: nome, cpf: cpf, ativo: ativoNumerico }),
     };
 
-    fetch("http://localhost:6050/funcionarios/insert", dadosFuncionarios)
+    fetch("http://localhost:6050/clientes/insert", dadosClientes)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Erro na solicitação.");
         }
 
         if (response.status === 200) {
-          console.log("Funcionário cadastrado com sucesso!");
+          console.log("Cliente cadastrado com sucesso!");
           setCadastroConcluido(true);
           setModalAberto(true);
         }
@@ -127,7 +127,7 @@ function CadastrarFuncionarios() {
   return (
     <div className={styles.formulario_container}>
       <div className={styles.titulo_formulario}>
-        <h1>Cadastro de Funcionários</h1>
+        <h1>Cadastro de Clientes</h1>
 
         <div className={styles.card_formulario_container}>
           <form onSubmit={handleSubmit}>
@@ -198,13 +198,13 @@ function CadastrarFuncionarios() {
 
       {modalAberto && (
         <Modal
-          mensagem="Funcionário cadastrado com sucesso!"
+          mensagem="Cliente cadastrado com sucesso!"
           onClose={() => setModalAberto(false)}
-          link="/funcionarios"
+          link="/clientes"
         />
       )}
     </div>
   );
 }
 
-export default CadastrarFuncionarios;
+export default CadastrarCliente;

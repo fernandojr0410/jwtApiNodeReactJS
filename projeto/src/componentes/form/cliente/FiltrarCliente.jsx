@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
-import ListaFuncionarios from "./ListaFuncionarios";
+import ListaCliente from "./ListaClientes";
 import Modal from "../../layout/Modal";
 import styles from "../../styles/FiltrarFuncionario.module.css";
 
-function FiltrarFuncionarios() {
-  const [funcionarios, setFuncionarios] = useState([]);
-  const [idFuncionario, setIdFuncionario] = useState("");
-  const [funcionarioInvalido, setFuncionarioInvalido] = useState(false);
+function FiltrarCliente() {
+  const [clientes, setClientes] = useState([]);
+  const [idCliente, setIdCliente] = useState("");
+  const [clienteInvalido, setClienteInvalido] = useState(false);
 
   const { token } = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
-    fetch("http://localhost:6050/funcionarios/findAll", {
+    fetch("http://localhost:6050/clientes/findAll", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -25,17 +25,17 @@ function FiltrarFuncionarios() {
         return response.json();
       })
       .then((data) => {
-        setFuncionarios(data);
+        setClientes(data);
       })
       .catch((error) => {
-        console.error("Erro ao buscar funcionário:", error);
+        console.error("Erro ao buscar Cliente:", error);
       });
   }, []);
 
-  const buscarFuncionariosId = () => {
-    if (!idFuncionario) return;
+  const buscarClientesId = () => {
+    if (!idCliente) return;
 
-    fetch(`http://localhost:6050/funcionarios/findById?id=${idFuncionario}`, {
+    fetch(`http://localhost:6050/clientes/findById?id=${idCliente}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -50,49 +50,49 @@ function FiltrarFuncionarios() {
       })
       .then((data) => {
         if (!data || !data.dados || data.dados.length === 0) {
-          setFuncionarioInvalido(true);
+          setClienteInvalido(true);
         } else {
-          setFuncionarioInvalido(false);
-          setFuncionarios(data);
+          setClienteInvalido(false);
+          setClientes(data);
         }
       })
       .catch((error) => {
-        console.error("Erro ao buscar funcionário:", error);
+        console.error("Erro ao buscar Cliente:", error);
       });
   };
 
   const handleIdFuncionarioChange = (event) => {
-    setIdFuncionario(event.target.value);
+    setIdCliente(event.target.value);
   };
 
   return (
     <div className={styles.formulario_container}>
       <small className={styles.usuario}>
-        <span>Usuário:</span> {funcionarios?.dadosUsuario?.nome}
+        <span>Usuário:</span> {clientes?.dadosUsuario?.nome}
       </small>
       <div className={styles.input_funcionario_id}>
         <input
-          type="input"
-          name="idFuncionario"
-          placeholder="Digite o Id Funcionário..."
-          value={idFuncionario}
+          type="number"
+          name="idCliente"
+          placeholder="Digite o Id Cliente..."
+          value={idCliente}
           onChange={handleIdFuncionarioChange}
         />
-        <button type="button" onClick={buscarFuncionariosId}>
+        <button type="button" onClick={buscarClientesId}>
           Buscar
         </button>
       </div>
 
-      {funcionarioInvalido && (
+      {clienteInvalido && (
         <Modal
-          mensagem="Funcionário não encontrado. Tente novamente."
-          onClose={() => setFuncionarioInvalido(false)}
+          mensagem="Cliente não encontrado. Tente novamente."
+          onClose={() => setClienteInvalido(false)}
         />
       )}
 
-      <ListaFuncionarios funcionarios={funcionarios} />
+      <ListaCliente clientes={clientes} />
     </div>
   );
 }
 
-export default FiltrarFuncionarios;
+export default FiltrarCliente;

@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
-import ListaFuncionarios from "./ListaFuncionarios";
+import ListaProdutos from "./ListaProdutos";
 import Modal from "../../layout/Modal";
 import styles from "../../styles/FiltrarFuncionario.module.css";
 
-function FiltrarFuncionarios() {
-  const [funcionarios, setFuncionarios] = useState([]);
-  const [idFuncionario, setIdFuncionario] = useState("");
-  const [funcionarioInvalido, setFuncionarioInvalido] = useState(false);
+function FiltrarProdutos() {
+  const [produtos, setProdutos] = useState([]);
+  const [idProduto, setIdProduto] = useState("");
+  const [produtoInvalido, setProdutoInvalido] = useState(false);
 
   const { token } = JSON.parse(localStorage.getItem("userData"));
 
   useEffect(() => {
-    fetch("http://localhost:6050/funcionarios/findAll", {
+    fetch("http://localhost:6050/produtos/findAll", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -25,17 +25,17 @@ function FiltrarFuncionarios() {
         return response.json();
       })
       .then((data) => {
-        setFuncionarios(data);
+        setProdutos(data);
       })
       .catch((error) => {
-        console.error("Erro ao buscar funcionário:", error);
+        console.error("Erro ao buscar produto:", error);
       });
   }, []);
 
-  const buscarFuncionariosId = () => {
-    if (!idFuncionario) return;
+  const buscarProdutoId = () => {
+    if (!idProduto) return;
 
-    fetch(`http://localhost:6050/funcionarios/findById?id=${idFuncionario}`, {
+    fetch(`http://localhost:6050/produtos/findById?id=${idProduto}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -50,49 +50,49 @@ function FiltrarFuncionarios() {
       })
       .then((data) => {
         if (!data || !data.dados || data.dados.length === 0) {
-          setFuncionarioInvalido(true);
+          setProdutoInvalido(true);
         } else {
-          setFuncionarioInvalido(false);
-          setFuncionarios(data);
+          setProdutoInvalido(false);
+          setProdutos(data);
         }
       })
       .catch((error) => {
-        console.error("Erro ao buscar funcionário:", error);
+        console.error("Erro ao buscar produto:", error);
       });
   };
 
-  const handleIdFuncionarioChange = (event) => {
-    setIdFuncionario(event.target.value);
+  const handleIdProdutoChange = (event) => {
+    setIdProduto(event.target.value);
   };
 
   return (
     <div className={styles.formulario_container}>
       <small className={styles.usuario}>
-        <span>Usuário:</span> {funcionarios?.dadosUsuario?.nome}
+        <span>Usuário:</span> {produtos?.dadosUsuario?.nome}
       </small>
       <div className={styles.input_funcionario_id}>
         <input
           type="input"
-          name="idFuncionario"
-          placeholder="Digite o Id Funcionário..."
-          value={idFuncionario}
-          onChange={handleIdFuncionarioChange}
+          name="idProduto"
+          placeholder="Digite o Id Produto..."
+          value={idProduto}
+          onChange={handleIdProdutoChange}
         />
-        <button type="button" onClick={buscarFuncionariosId}>
+        <button type="button" onClick={buscarProdutoId}>
           Buscar
         </button>
       </div>
 
-      {funcionarioInvalido && (
+      {produtoInvalido && (
         <Modal
-          mensagem="Funcionário não encontrado. Tente novamente."
-          onClose={() => setFuncionarioInvalido(false)}
+          mensagem="Produto não encontrado. Tente novamente."
+          onClose={() => setProdutoInvalido(false)}
         />
       )}
 
-      <ListaFuncionarios funcionarios={funcionarios} />
+      <ListaProdutos produtos={produtos} />
     </div>
   );
 }
 
-export default FiltrarFuncionarios;
+export default FiltrarProdutos;

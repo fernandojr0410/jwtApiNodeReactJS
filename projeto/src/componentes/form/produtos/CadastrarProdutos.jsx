@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import Modal from "../../layout/Modal";
 import styles from "../../styles/FiltrarFuncionario.module.css";
 
-function CadastrarFuncionarios() {
+function CadastrarProdutos() {
   const [nome, setNome] = useState("");
   const [nomeError, setNomeError] = useState("");
-  const [cpf, setCpf] = useState("");
+  const [preco, setPreco] = useState("");
   const [cpfError, setCpfError] = useState("");
   const [ativo, setAtivo] = useState(false);
   const [ativoError, setAtivoError] = useState("");
@@ -15,28 +15,9 @@ function CadastrarFuncionarios() {
 
   const { token } = JSON.parse(localStorage.getItem("userData"));
 
-  // Formatar o CPF com máscara
-  const formatCPF = (value) => {
-    const cleanedValue = value.replace(/\D/g, "");
-
-    // máscara com os pontos após os três primeiros números
-    let formattedValue = "";
-    for (let i = 0; i < cleanedValue.length; i++) {
-      if (i === 3 || i === 6) {
-        formattedValue += ".";
-      }
-      if (i === 9) {
-        formattedValue += "-";
-      }
-      formattedValue += cleanedValue.charAt(i);
-    }
-
-    return formattedValue;
-  };
-
   useEffect(() => {
     validarFormulario();
-  }, [nome, cpf, ativo, ativoError, nomeError, cpfError]);
+  }, [nome, preco, ativo, ativoError, nomeError, cpfError]);
 
   // Validação Nome
   const validar_nome = (valor) => {
@@ -54,8 +35,8 @@ function CadastrarFuncionarios() {
       ativoError === "" &&
       ativo !== "" &&
       cpfError === "" &&
-      cpf !== "" &&
-      cpf.length >= 14
+      preco !== "" &&
+      preco.length < 0
     ) {
       setFormularioValido(true);
     } else {
@@ -79,34 +60,33 @@ function CadastrarFuncionarios() {
       setAtivoError("");
     }
 
-    // Validação CPF
-    if (cpf === "") {
-      setCpfError("Preencha a cpf");
-    } else if (cpf.length !== 14) {
-      setCpfError("Cpf precisa ter no minimo 11 caracteres");
+    if (preco === "") {
+      setCpfError("Preencha a preco");
+    } else if (preco.length <= 0) {
+      setCpfError("Valor não é permitido");
     } else {
       setCpfError("");
     }
 
     const ativoNumerico = ativo === "1" ? 1 : 0;
 
-    const dadosFuncionarios = {
+    const dadosProdutos = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-access-token": token,
       },
-      body: JSON.stringify({ nome: nome, cpf: cpf, ativo: ativoNumerico }),
+      body: JSON.stringify({ nome: nome, preco: preco, ativo: ativoNumerico }),
     };
 
-    fetch("http://localhost:6050/funcionarios/insert", dadosFuncionarios)
+    fetch("http://localhost:6050/produtos/insert", dadosProdutos)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Erro na solicitação.");
         }
 
         if (response.status === 200) {
-          console.log("Funcionário cadastrado com sucesso!");
+          console.log("Produto cadastrado com sucesso!");
           setCadastroConcluido(true);
           setModalAberto(true);
         }
@@ -114,9 +94,12 @@ function CadastrarFuncionarios() {
       .catch((error) => console.error(error));
   };
 
-  const handleCpfChange = (event) => {
-    const formattedCpf = formatCPF(event.target.value);
-    setCpf(formattedCpf);
+  const handlePrecoChange = (event) => {
+    const input = event.target.value;
+
+    if (/^\d{0,5}(\.\d{0,2})?$/.test(input)) {
+      setPreco(input);
+    }
   };
 
   const handleAtivoChange = (event) => {
@@ -127,13 +110,13 @@ function CadastrarFuncionarios() {
   return (
     <div className={styles.formulario_container}>
       <div className={styles.titulo_formulario}>
-        <h1>Cadastro de Funcionários</h1>
+        <h1>Cadastro de Produtos</h1>
 
         <div className={styles.card_formulario_container}>
           <form onSubmit={handleSubmit}>
             <div className={styles.informacoes_formulario}>
               <label className={nomeError ? styles.label_error : ""}>
-                Nome *
+                Produto *
               </label>
               <input
                 type="text"
@@ -153,15 +136,15 @@ function CadastrarFuncionarios() {
 
             <div className={styles.informacoes_formulario}>
               <label className={cpfError ? styles.label_error : ""}>
-                CPF *
+                Preço *
               </label>
               <input
                 type="text"
-                name="cpf"
+                name="preco"
                 style={{ borderColor: cpfError ? "red" : "" }}
-                placeholder="Digite seu CPF..."
-                value={cpf}
-                onChange={handleCpfChange}
+                placeholder="Digite o preço do produto..."
+                value={preco}
+                onChange={handlePrecoChange}
               />
               {cpfError && (
                 <span className={styles.error_mensagem}>{cpfError}</span>
@@ -198,13 +181,13 @@ function CadastrarFuncionarios() {
 
       {modalAberto && (
         <Modal
-          mensagem="Funcionário cadastrado com sucesso!"
+          mensagem="Produto cadastrado com sucesso!"
           onClose={() => setModalAberto(false)}
-          link="/funcionarios"
+          link="/produtos"
         />
       )}
     </div>
   );
 }
 
-export default CadastrarFuncionarios;
+export default CadastrarProdutos;
