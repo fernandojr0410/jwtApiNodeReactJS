@@ -73,24 +73,26 @@ function CadastrarContas() {
     const statusNumerico = status === "1" ? 1 : 0;
 
     const dadosContas = {
+      status: statusNumerico,
+      quantidadePessoa: quantidadePessoa,
+      totalConta: totalConta,
+      valorIndividual: valorIndividual,
+      pagamento: pagamento,
+      observacao: observacao,
+    };
+
+    const requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-access-token": token,
       },
-      body: {
-        status: statusNumerico,
-        quantidadePessoa: quantidadePessoa,
-        totalConta: totalConta,
-        valorIndividual: valorIndividual,
-        pagamento: pagamento,
-        observacao: observacao,
-      },
+      body: JSON.stringify(dadosContas),
     };
 
     console.log(dadosContas);
 
-    fetch("http://localhost:6050/contas/insert", dadosContas)
+    fetch("http://localhost:6050/contas/insert", requestOptions)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Erro na solicitação.");
