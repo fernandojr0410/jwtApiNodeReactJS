@@ -7,6 +7,7 @@ import Funcionarios from "./componentes/pages/Funcionarios";
 import Clientes from "./componentes/pages/Clientes";
 import Produtos from "./componentes/pages/Produtos";
 import Contas from "./componentes/pages/Contas";
+import PedidoConta from "./componentes/pages/PedidoConta";
 import Relatorios from "./componentes/pages/Relatorios";
 
 import LoginFuncionario from "./componentes/form//funcionarios/LoginFuncionario";
@@ -39,6 +40,8 @@ import FiltrarContas from "./componentes/form/conta/FiltrarContas";
 import ListaContas from "./componentes/form/conta/ListaContas";
 import CadastrarContas from "./componentes/form/conta/CadastrarContas";
 import AtualizarContas from "./componentes/form/conta/AtualizarContas";
+import DeletarContasId from "./componentes/form/conta/DeletarContasId";
+import FiltrarPedidoContas from "./componentes/form/pedidoContas/FiltrarPedidoContas";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -192,6 +195,21 @@ function App() {
           exact
           path="/atualizarContas"
           element={<AtualizarContas token={token} />}
+        />
+        <Route
+          exact
+          path="/deletarContasId"
+          element={<DeletarContasId token={token} />}
+        />
+        <Route
+          exact
+          path="/pedidoConta"
+          element={<PedidoConta token={token} />}
+        />
+        <Route
+          exact
+          path="/filtrarPedidoContas"
+          element={<FiltrarPedidoContas token={token} />}
         />
 
         <Route

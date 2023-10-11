@@ -10,37 +10,18 @@ function AtualizarContas() {
   const [valorIndividual, setValorIndividual] = useState("");
   const [pagamento, setPagamento] = useState("");
   const [observacao, setObservacao] = useState("");
-  const [quantidadePessoaError, setQuantidadePessoaError] = useState("");
-  const [statusError, setStatusError] = useState("");
-  const [IdContaError, setIdContaError] = useState("")
-  const [totalContaError, setTotalContaError] = useState("");
-  const [valorIndividualError, setValorIndividualError] = useState("");
-  const [pagamentoError, setPagamentoError] = useState("");
-  const [observacaoError, setObservacaoError] = useState("");
+
+  const [idContaError, setIdContaError] = useState("");
+  const [erroAoAtualizar, setErroAoAtualizar] = useState(false);
+
   const [formularioValido, setFormularioValido] = useState(false);
   const [cadastroConcluido, setCadastroConcluido] = useState(false);
   const [modalAberto, setModalAberto] = useState(false);
-  const [erroAoAtualizar, setErroAoAtualizar] = useState(false);
 
   const { token } = JSON.parse(localStorage.getItem("userData"));
 
   const validarFormulario = () => {
-    if (
-      IdContaError === "" &&
-      id_conta !== "" &&
-      statusError === "" &&
-      status !== "" &&
-      quantidadePessoaError === "" &&
-      quantidadePessoa !== "" &&
-      totalContaError === "" &&
-      totalConta !== "" &&
-      valorIndividualError === "" &&
-      valorIndividual !== "" &&
-      pagamentoError !== "" &&
-      pagamento !== "" &&
-      observacaoError !== "" &&
-      observacao !== ""
-    ) {
+    if (idContaError === "" && id_conta !== "") {
       setFormularioValido(true);
     } else {
       setFormularioValido(false);
@@ -50,29 +31,10 @@ function AtualizarContas() {
   const handleSubmit = (evento) => {
     evento.preventDefault();
 
-    if (status === "") {
-      setStatusError("Preencha o status");
-    }
-    if (quantidadePessoa === "") {
-      setQuantidadePessoaError("Preencha a quantidade de pessoas");
-    } else if (quantidadePessoa > 4) {
-      setQuantidadePessoa("Só pode dividir no máximo 4 pessoas");
-    }
-
-    if (totalConta === "") {
-      setTotalContaError("Preencha o total de conta");
-    }
-
-    if (valorIndividual === "") {
-      setValorIndividual("Preencha o valor individual");
-    }
-
-    if (pagamento === "") {
-      setPagamento("Preencha o pagamento");
-    }
-
-    if (observacao === "") {
-      setObservacaoError("Preencha a observação");
+    if (id_conta === "") {
+      setIdContaError("Preencha o id da conta");
+    } else {
+      setIdContaError("");
     }
 
     const camposAtualizados = {};
@@ -95,7 +57,7 @@ function AtualizarContas() {
       camposAtualizados.observacao = observacao;
     }
 
-    fetch(`http://localhost:6050/pedidos/update/${id_conta}`, {
+    fetch(`http://localhost:6050/contas/update/${id_conta}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -118,6 +80,10 @@ function AtualizarContas() {
         setErroAoAtualizar(true);
         setModalAberto(true);
       });
+  };
+
+  const handleIdContaChange = (event) => {
+    setIdConta(event.target.value);
   };
 
   const handleStatusChange = (event) => {
@@ -165,12 +131,26 @@ function AtualizarContas() {
         <div className={styles.card_formulario_container}>
           <form onSubmit={handleSubmit}>
             <div className={styles.informacoes_formulario}>
-              <label className={statusError ? styles.label_error : ""}>
-                Status *
+              <label className={idContaError ? styles.label_error : ""}>
+                ID Conta *
               </label>
+              <input
+                type="text"
+                name="id_conta"
+                style={{ borderColor: idContaError ? "red" : "" }}
+                placeholder="Digite o Id da Conta..."
+                value={id_conta}
+                onChange={handleIdContaChange}
+              />
+              {idContaError && (
+                <span className={styles.error_mensagem}>{idContaError}</span>
+              )}
+            </div>
+
+            <div className={styles.informacoes_formulario}>
+              <label>Status *</label>
               <select
                 name="status"
-                style={{ borderColor: statusError ? "red" : "" }}
                 value={status}
                 onChange={handleStatusChange}
               >
@@ -178,105 +158,66 @@ function AtualizarContas() {
                 <option value="1">Ativo</option>
                 <option value="0">Inativo</option>
               </select>
-              {statusError && (
-                <span className={styles.error_mensagem}>{statusError}</span>
-              )}
             </div>
 
             <div className={styles.informacoes_formulario}>
-              <label
-                className={quantidadePessoaError ? styles.label_error : ""}
-              >
-                Quantidade de Pessoas *
-              </label>
+              <label>Quantidade de Pessoas *</label>
               <input
                 type="number"
                 name="quantidadePessoa"
-                style={{ borderColor: quantidadePessoaError ? "red" : "" }}
                 placeholder="Digite a quantidade de pessoas..."
                 value={quantidadePessoa}
                 onChange={handleQuantidadePessoaChange}
               />
-              {quantidadePessoaError && (
-                <span className={styles.error_mensagem}>
-                  {quantidadePessoaError}
-                </span>
-              )}
             </div>
 
             <div className={styles.informacoes_formulario}>
-              <label className={totalContaError ? styles.label_error : ""}>
-                Total Conta *
-              </label>
+              <label>Total Conta *</label>
               <input
                 type="text"
                 name="totalConta"
-                style={{ borderColor: totalContaError ? "red" : "" }}
                 placeholder="Digite o total da conta..."
                 value={totalConta}
                 onChange={handleTotalContaChange}
               />
-              {totalContaError && (
-                <span className={styles.error_mensagem}>{totalContaError}</span>
-              )}
             </div>
 
             <div className={styles.informacoes_formulario}>
-              <label className={valorIndividualError ? styles.label_error : ""}>
-                Valor Individual *
-              </label>
+              <label>Valor Individual *</label>
               <input
                 type="text"
                 name="valorIndividual"
-                style={{ borderColor: valorIndividualError ? "red" : "" }}
                 placeholder="Digite o valor individual..."
                 value={valorIndividual}
                 onChange={handleValorIndividual}
               />
-              {valorIndividualError && (
-                <span className={styles.error_mensagem}>
-                  {valorIndividualError}
-                </span>
-              )}
             </div>
 
             <div className={styles.informacoes_formulario}>
-              <label className={pagamentoError ? styles.label_error : ""}>
-                Pagamento *
-              </label>
+              <label>Pagamento *</label>
               <input
                 type="text"
                 name="pagamento"
-                style={{ borderColor: pagamentoError ? "red" : "" }}
                 placeholder="Digite o pagamento..."
                 value={pagamento}
                 onChange={handlePagamentoChange}
               />
-              {pagamentoError && (
-                <span className={styles.error_mensagem}>{pagamentoError}</span>
-              )}
             </div>
 
             <div className={styles.informacoes_formulario}>
-              <label className={observacaoError ? styles.label_error : ""}>
-                Observação *
-              </label>
+              <label>Observação *</label>
               <input
                 type="text"
                 name="observacao"
-                style={{ borderColor: observacaoError ? "red" : "" }}
                 placeholder="Digite a observação..."
                 value={observacao}
                 onChange={handleObservacaoChange}
               />
-              {observacaoError && (
-                <span className={styles.error_mensagem}>{observacaoError}</span>
-              )}
             </div>
 
             <div className={styles.informacoes_formulario}>
               <div className={styles.button_formulario}>
-                <button type="submit">Cadastrar</button>
+                <button type="submit">Atualizar</button>
               </div>
             </div>
           </form>
@@ -285,7 +226,7 @@ function AtualizarContas() {
 
       {modalAberto && (
         <Modal
-          mensagem="Conta cadastrado com sucesso!"
+          mensagem="Conta atualizada com sucesso!"
           onClose={() => setModalAberto(false)}
           link="/contas"
         />

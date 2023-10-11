@@ -33,6 +33,9 @@ function Header() {
         <Link to="/contas">
           <li className={styles.item}>Contas</li>
         </Link>
+        <Link to="/pedidoConta">
+          <li className={styles.item}>Pedido Conta</li>
+        </Link>
 
         <Link to="/relatorios">
           <li className={styles.item}>Relatórios</li>
