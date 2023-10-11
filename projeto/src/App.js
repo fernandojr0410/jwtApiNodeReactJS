@@ -38,6 +38,7 @@ import ListaPedidos from "./componentes/form/pedidos/ListaPedidos";
 import FiltrarContas from "./componentes/form/conta/FiltrarContas";
 import ListaContas from "./componentes/form/conta/ListaContas";
 import CadastrarContas from "./componentes/form/conta/CadastrarContas";
+import AtualizarContas from "./componentes/form/conta/AtualizarContas";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -185,6 +186,12 @@ function App() {
           exact
           path="/cadastrarContas"
           element={<CadastrarContas token={token} />}
+        />
+
+        <Route
+          exact
+          path="/atualizarContas"
+          element={<AtualizarContas token={token} />}
         />
 
         <Route
