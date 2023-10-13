@@ -6,7 +6,7 @@ import ListaPedidoContas from "./ListaPedidoContas";
 function FiltrarPedidoContas() {
   const [pedidoContas, setPedidoContas] = useState([]);
   const [id_pedido, setIdPedido] = useState("");
-  const [id_conta, setIdConta] = useState(""); // Novo campo para ID da Conta
+  const [id_conta, setIdConta] = useState("");
   const [contaInvalida, setContaInvalida] = useState(false);
   const [pedidoInvalido, setPedidoInvalido] = useState(false);
   const { token } = JSON.parse(localStorage.getItem("userData"));
@@ -79,7 +79,9 @@ function FiltrarPedidoContas() {
   return (
     <div className={styles.formulario_container}>
       <div className={styles.usuario}>
-        <span>Usuário: fernandojr</span>
+        <small className={styles.usuario}>
+          <span>Usuário:</span> {pedidoContas?.dadosUsuario?.nome}
+        </small>
       </div>
 
       <div className={styles.input_funcionario_id}>
