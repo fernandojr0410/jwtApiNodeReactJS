@@ -24,19 +24,6 @@ function AtualizarPedidos() {
   const handleSubmit = (evento) => {
     evento.preventDefault();
 
-    if (id_pedido === "") {
-      setId_pedidoError("Insira o ID pedido");
-    }
-    if (id_funcionario === "") {
-      setId_funcionarioError("Insira o ID funcionario");
-    }
-    if (id_cliente === "") {
-      id_clienteError("Insira o ID cliente");
-    }
-    if (status === "") {
-      setStatusError("Insira um status");
-    }
-
     const camposAtualizados = {};
     if (id_pedido !== "") {
       camposAtualizados.id_pedido = id_pedido;

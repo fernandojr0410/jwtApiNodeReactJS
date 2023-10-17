@@ -8,17 +8,17 @@ function ItemPedido({ token }) {
         <h1>Qual opção deseja?</h1>
 
         <div className={styles.lista_menus}>
-          <Link to="/filtrarPedidoProduto" token={token}>
+          <Link to="/filtrarPedidoProdutos" token={token}>
             <span>Filtrar Pedido Produto</span>
           </Link>
 
-          <Link to="/cadastrarPedidoContas" token={token}>
+          <Link to="/cadastrarPedidoProdutos" token={token}>
             <span>Cadastrar Pedido Produto</span>
           </Link>
-          <Link to="/atualizarPedidoContas" token={token}>
+          <Link to="/atualizarPedidoProdutos" token={token}>
             <span>Atualizar Pedido Produto</span>
           </Link>
-          <Link to="/deletarPedidoContas" token={token}>
+          <Link to="/deletarPedidoProdutos" token={token}>
             <span>Deletar Pedido Produto</span>
           </Link>
         </div>

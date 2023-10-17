@@ -68,11 +68,6 @@ function AtualizarFuncionarios() {
       camposAtualizados.ativo = ativo;
     }
 
-    // console.log("ID Funcionário antes da requisição:", idFuncionario);
-    // console.log("Nome Funcionário antes da requisição:", nome);
-    // console.log("cpf Funcionário antes da requisição:", cpf);
-    // console.log("ativo Funcionário antes da requisição:", ativo);
-
     fetch(`http://localhost:6050/funcionarios/update/${idFuncionario}`, {
       method: "PUT",
       headers: {

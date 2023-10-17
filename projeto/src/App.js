@@ -47,6 +47,11 @@ import CadastrarPedidoContas from "./componentes/form/pedidoContas/CadastrarPedi
 import AtualizarPedidoContas from "./componentes/form/pedidoContas/AtualizarPedidoContas";
 import DeletarPedidoContas from "./componentes/form/pedidoContas/DeletarPedidoContas";
 import ItemPedido from "./componentes/pages/ItemPedido";
+import FiltrarPedidoProdutos from "./componentes/form/pedidoProduto/FiltrarPedidoProdutos";
+import ListaPedidoProdutos from "./componentes/form/pedidoProduto/ListaPedidoProduto";
+import CadastrarPedidoProdutos from "./componentes/form/pedidoProduto/CadastrarPedidoProdutos";
+import AtualizarPedidoProdutos from "./componentes/form/pedidoProduto/AtualizarPedidoProdutos";
+import DeletarPedidoProduto from "./componentes/form/pedidoProduto/DeletarPedidoProdutos";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -243,8 +248,37 @@ function App() {
 
         <Route
           exact
-          path="/itemPedido"
+          path="/pedidoProduto"
           element={<ItemPedido token={token} />}
+        />
+
+        <Route
+          exact
+          path="/filtrarPedidoProdutos"
+          element={<FiltrarPedidoProdutos token={token} />}
+        />
+
+        <Route
+          exact
+          path="/listaPedidoProdutos"
+          element={<ListaPedidoProdutos token={token} />}
+        />
+
+        <Route
+          exact
+          path="/cadastrarPedidoProdutos"
+          element={<CadastrarPedidoProdutos token={token} />}
+        />
+
+        <Route
+          exact
+          path="/atualizarPedidoProdutos"
+          element={<AtualizarPedidoProdutos token={token} />}
+        />
+        <Route
+          exact
+          path="/deletarPedidoProdutos"
+          element={<DeletarPedidoProduto token={token} />}
         />
 
         <Route
