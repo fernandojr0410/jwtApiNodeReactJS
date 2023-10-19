@@ -4,7 +4,7 @@
   align-items: center;
   flex-direction: column;
   background-color: #04709f;
-  height: 100%;
+  min-height: 100vh;
 }
 
 .titulo_formulario {
